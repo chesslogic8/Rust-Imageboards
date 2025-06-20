@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Imageboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="logo">Imageboard</div>
+    <div class="postarea">
+        <form action="/new" method="post" enctype="multipart/form-data" class="postform">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="postblock">Subject</td>
+                        <td>
+                            <input type="text" name="subject" maxlength="75" required autocomplete="off" style="width:320px;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="postblock">Message</td>
+                        <td>
+                            <textarea name="message" rows="4" required maxlength="50000" style="width:320px;"></textarea>
+                            <div style="font-size:12px;color:#888;">Max 50,000 characters. Max file size: 50MB</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="postblock">File</td>
+                        <td><input type="file" name="media"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="submit" value="Create Thread"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <hr>
+    {% for thread in threads %}
+    <div class="thread op" style="overflow:auto;">
+        {% if let Some(media) = thread.media %}
+            <div class="filesize">
+                File: <a href="/uploads/{{ media }}" target="_blank">{{ media }}</a>
+            </div>
+            <a href="/uploads/{{ media }}" target="_blank">
+                {% if media.ends_with(".mp4") %}
+                    <video controls width="250" style="float:left; margin:4px 20px 4px 0;">
+                        <source src="/uploads/{{ media }}">
+                    </video>
+                {% else %}
+                    <img src="/uploads/{{ media }}" width="250" style="float:left; margin:4px 20px 4px 0;">
+                {% endif %}
+            </a>
+        {% endif %}
+        <span class="filetitle">{{ thread.subject | escape }}</span>
+        <div class="message" style="margin-left: 270px;">{{ thread.preview | escape }}</div>
+        <div style="clear:both;"></div>
+        {% if let Some(replies) = last_replies.get(&thread.id) %}
+            {% for post in replies %}
+                <div class="reply" style="margin:18px 0 10px 36px; overflow:auto;">
+                    {% if let Some(media) = post.media %}
+                        <div class="filesize">
+                            File: <a href="/uploads/{{ media }}" target="_blank">{{ media }}</a>
+                        </div>
+                        <a href="/uploads/{{ media }}" target="_blank">
+                            {% if media.ends_with(".mp4") %}
+                                <video controls width="180" style="float:left; margin:4px 16px 4px 0;">
+                                    <source src="/uploads/{{ media }}">
+                                </video>
+                            {% else %}
+                                <img src="/uploads/{{ media }}" width="180" style="float:left; margin:4px 16px 4px 0;">
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                    <div class="message" style="margin-left: 196px;">{{ post.preview | escape }}</div>
+                    <div style="clear:both;"></div>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div>
+            [<a href="/thread/{{ thread.id }}">Reply</a>] | Replies: {{ thread_reply_counts.get(&thread.id).unwrap_or(&0) }}
+        </div>
+    </div>
+    {% endfor %}
+    <hr>
+    <div style="text-align:center; margin: 10px;">
+        {% if page > 0 %}
+            <a href="/page/{{ page - 1 }}">&lt; Prev</a>
+        {% endif %}
+        {% for n in (0..page_count) %}
+            {% if n == page %}
+                <b>[{{ n+1 }}]</b>
+            {% else %}
+                <a href="/page/{{ n }}">[{{ n+1 }}]</a>
+            {% endif %}
+        {% endfor %}
+        {% if page+1 < page_count %}
+            <a href="/page/{{ page + 1 }}">Next &gt;</a>
+        {% endif %}
+    </div>
+    <div class="footer">Powered by Rust imageboard</div>
+</body>
+</html>

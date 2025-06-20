@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Error – Imageboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="logo">Imageboard</div>
+    <div style="margin:2em auto;max-width:600px;padding:2em;border:2px solid #d66;background:#fbeaea;border-radius:12px;">
+        <h2 style="color:#a22;">Error</h2>
+        <div style="font-size:1.2em;margin-bottom:1em;color:#222;">
+            {{ message | safe }}
+        </div>
+        <div style="font-size:0.95em;margin-bottom:1em;">
+            <b>Limits and allowed types:</b><br>
+            • Max message length: 50,000 bytes (about 50,000 characters)<br>
+            • Max file size: 50MB<br>
+            • Allowed file types: jpg, png, gif, webp, bmp, mp4
+        </div>
+        <div style="margin-top:2em;">
+            <a href="{{ back_url }}" style="font-size:1.2em;padding:0.6em 1.4em;background:#4b7ad6;color:#fff;border-radius:8px;text-decoration:none;">&larr; Go Back</a>
+        </div>
+    </div>
+</body>
+</html>

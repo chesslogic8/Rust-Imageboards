@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ thread.subject | escape }} – Imageboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="logo">Imageboard</div>
+    <div style="margin-bottom:10px;">
+        <a href="/" style="font-size:14px;">&#91;Return&#93;</a>
+        <div class="replymode">Posting mode: Reply</div>
+    </div>
+    <div class="thread op" style="overflow:auto;">
+        <span class="filetitle">{{ thread.subject | escape }}</span>
+        {% if let Some(media) = thread.media %}
+            <div class="filesize">
+                File: <a href="/uploads/{{ media }}" target="_blank">{{ media }}</a>
+            </div>
+            <div>
+                <a href="/uploads/{{ media }}" target="_blank">
+                    {% if media.ends_with(".mp4") %}
+                        <video controls width="250" style="display:block; margin:0 auto 8px auto;">
+                            <source src="/uploads/{{ media }}">
+                        </video>
+                    {% else %}
+                        <img src="/uploads/{{ media }}" width="250" style="display:block; margin:0 auto 8px auto;">
+                    {% endif %}
+                </a>
+            </div>
+        {% endif %}
+        <div class="message" style="margin-top:10px;">{{ thread.message | escape }}</div>
+    </div>
+    {% for post in posts %}
+        <div class="reply" style="margin:18px 0 10px 36px; overflow:auto;">
+            {% if let Some(media) = post.media %}
+                <div class="filesize">
+                    File: <a href="/uploads/{{ media }}" target="_blank">{{ media }}</a>
+                </div>
+                <div>
+                    <a href="/uploads/{{ media }}" target="_blank">
+                        {% if media.ends_with(".mp4") %}
+                            <video controls width="180" style="display:block; margin:0 auto 8px auto;">
+                                <source src="/uploads/{{ media }}">
+                            </video>
+                        {% else %}
+                            <img src="/uploads/{{ media }}" width="180" style="display:block; margin:0 auto 8px auto;">
+                        {% endif %}
+                    </a>
+                </div>
+            {% endif %}
+            <div class="message" style="margin-top:10px;">{{ post.message | escape }}</div>
+        </div>
+    {% endfor %}
+    <hr>
+    <div class="postarea">
+        <form action="/reply/{{ thread.id }}" method="post" enctype="multipart/form-data" class="postform">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="postblock">Message</td>
+                        <td>
+                            <textarea name="message" cols="48" rows="4" required maxlength="50000" style="width:320px;"></textarea>
+                            <div style="font-size:12px;color:#888;">Max 50,000 characters. Max file size: 50MB</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="postblock">File</td>
+                        <td><input type="file" name="media"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="submit" value="Reply"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <div class="footer"><a href="/" style="color:#34345C;">Return to board</a></div>
+</body>
+</html>

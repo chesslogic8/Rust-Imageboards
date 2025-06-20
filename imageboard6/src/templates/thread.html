@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ thread.subject | escape }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>{{ thread.subject | escape }}</h1>
+    <div class="post op">
+        <p>{{ thread.message | escape }}</p>
+        {% if let Some(media) = thread.media %}
+            {% if media.ends_with(".mp4") %}
+                <video controls width="320">
+                    <source src="/uploads/{{ media }}">
+                </video>
+            {% else %}
+                <img src="/uploads/{{ media }}" width="320">
+            {% endif %}
+        {% endif %}
+    </div>
+    <hr>
+    <form action="/reply/{{ thread.id }}" method="post" enctype="multipart/form-data">
+        <textarea name="message" placeholder="Reply"></textarea><br>
+        <input type="file" name="media"><br>
+        <button type="submit">Reply</button>
+    </form>
+    <hr>
+    {% for post in posts %}
+        <div class="post">
+            <p>{{ post.message | escape }}</p>
+            {% if let Some(media) = post.media %}
+                {% if media.ends_with(".mp4") %}
+                    <video controls width="320">
+                        <source src="/uploads/{{ media }}">
+                    </video>
+                {% else %}
+                    <img src="/uploads/{{ media }}" width="320">
+                {% endif %}
+            {% endif %}
+        </div>
+        <hr>
+    {% endfor %}
+    <p><a href="/">Back to board</a></p>
+</body>
+</html>

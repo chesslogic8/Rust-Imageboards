@@ -1,0 +1,292 @@
+html, body {
+    font-size: 15px;
+    background: #EEF2FF;
+    color: #000;
+    font-family: sans-serif;
+}
+
+a {
+    color: #34345C;
+    text-decoration: none;
+}
+a:hover {
+    color: #DD0000;
+    text-decoration: underline;
+}
+hr {
+    color: #34345C;
+    background-color: #34345C;
+    border: 0;
+    height: 1px;
+    margin: 1em 0;
+}
+.logo {
+    text-align: center;
+    font-size: 2em;
+    color: #AF0A0F;
+    margin: 0.5em 0;
+}
+
+.footer {
+    font-size: 11px;
+    color: #888;
+    text-align: center;
+    margin: 18px 0;
+}
+
+/* Navigation Buttons & Topnav */
+.topnav { display: flex; align-items: center; margin-bottom: 10px; }
+.navbtn {
+    background: #eee;
+    border: 1px solid #bbb;
+    padding: 3px 18px;
+    border-radius: 7px;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 1em;
+    text-decoration: none;
+    color: #222;
+    transition: background 0.2s;
+}
+.navbtn:hover { background: #d0e1ff; color: #222; }
+
+.replymodebar {
+    display: flex;
+    align-items: center;
+    background: #0010E0;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1em;
+    padding: 7px 8px;
+    border-radius: 0 0 6px 6px;
+    margin-bottom: 14px;
+}
+.replymodebar span { margin-left: 1em; color: #fff; }
+
+.postarea {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+/* Modern Post Form Styling */
+.modern-form {
+    background: #e4e8fb;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px #c0c8ef4c;
+    padding: 18px 26px 12px 26px;
+    margin: 0 auto 20px auto;
+    max-width: 520px;
+    display: block;
+}
+.modern-form input[type="text"],
+.modern-form textarea {
+    display: block;
+    width: 100%;
+    border: 1.5px solid #9bb1e1;
+    border-radius: 8px;
+    background: #f4f5fd;
+    color: #222;
+    padding: 9px 12px;
+    font-size: 1em;
+    margin-bottom: 12px;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+.modern-form input[type="text"]:focus,
+.modern-form textarea:focus {
+    border: 1.5px solid #7173e6;
+    box-shadow: 0 0 0 2px #b5baff44;
+    outline: none;
+    background: #eef0ff;
+}
+.modern-form input[type="file"] {
+    margin-bottom: 14px;
+    display: block;
+}
+.modern-form .info {
+    font-size: 12px;
+    color: #667;
+    margin-bottom: 12px;
+}
+.modern-form input[type="submit"], .modern-form button {
+    background: linear-gradient(90deg, #8ca3ee 0%, #b4b5fa 100%);
+    color: #222;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 24px;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 6px;
+    box-shadow: 0 1px 5px #bac1e433;
+    transition: background 0.2s, color 0.2s;
+    display: block;
+}
+.modern-form input[type="submit"]:hover, .modern-form button:hover {
+    background: linear-gradient(90deg, #6778c2 0%, #adabe3 100%);
+    color: #fff;
+}
+
+/* Board name and description inside post form (inline) */
+.boardinfo {
+    margin-bottom: 12px;
+    text-align: left;
+    font-size: 1.08em;
+    white-space: normal;
+}
+.boardname {
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: #3a4090;
+}
+.boarddesc {
+    color: #567;
+    font-weight: 400;
+    margin-left: 2px;
+}
+.modern-form .form-divider {
+    margin: 16px 0 16px 0;
+    border-top: 1px solid #b4b6db;
+    opacity: 0.30;
+}
+
+/* Thread and replies */
+.thread, .reply {
+    background: #D6DAF0 !important;
+    color: #000 !important;
+    font-family: serif !important;
+    border: 1px solid #B7C5D9;
+    border-radius: 2px;
+    max-width: 700px;
+    margin: 16px auto 24px auto;
+    padding: 8px 14px;
+    word-wrap: break-word;
+}
+.filetitle {
+    color: #0F0C5D;
+    font-size: 1.18em;
+    font-weight: bold;
+}
+
+/* ==== DARK MODE ==== */
+body.darkmode, html.darkmode {
+    background: #1a2030 !important;
+    color: #cdd0e7 !important;
+}
+body.darkmode .logo, html.darkmode .logo { color: #b9cdf6; }
+body.darkmode .thread, body.darkmode .reply,
+html.darkmode .thread, html.darkmode .reply {
+    background: #252f46 !important;
+    color: #cdd0e7 !important;
+    border: 1.5px solid #35395b;
+}
+body.darkmode .filetitle, html.darkmode .filetitle {
+    color: #bac8ff !important;
+}
+body.darkmode .footer, html.darkmode .footer {
+    color: #666b85 !important;
+}
+body.darkmode .modern-form, html.darkmode .modern-form {
+    background: #262d43 !important;
+    box-shadow: 0 2px 8px #1a203088;
+}
+body.darkmode .modern-form input[type="text"],
+body.darkmode .modern-form textarea,
+html.darkmode .modern-form input[type="text"],
+html.darkmode .modern-form textarea {
+    background: #22263a !important;
+    color: #dde2fc !important;
+    border-color: #434769;
+}
+body.darkmode .modern-form input[type="text"]:focus,
+body.darkmode .modern-form textarea:focus,
+html.darkmode .modern-form input[type="text"]:focus,
+html.darkmode .modern-form textarea:focus {
+    background: #292f45 !important;
+    border-color: #7b83cf;
+}
+body.darkmode .modern-form input[type="file"],
+html.darkmode .modern-form input[type="file"] {
+    color: #dde2fc;
+}
+body.darkmode .modern-form .info, html.darkmode .modern-form .info {
+    color: #95a0bf !important;
+}
+body.darkmode .modern-form input[type="submit"], html.darkmode .modern-form input[type="submit"] {
+    background: linear-gradient(90deg, #4e579e 0%, #8186bf 100%) !important;
+    color: #e6eafc !important;
+}
+body.darkmode .modern-form input[type="submit"]:hover, html.darkmode .modern-form input[type="submit"]:hover {
+    background: linear-gradient(90deg, #282b54 0%, #656bb3 100%) !important;
+    color: #fff !important;
+}
+body.darkmode .replymodebar, html.darkmode .replymodebar {
+    background: #2c3460 !important;
+    color: #b4bfff !important;
+}
+body.darkmode .navbtn, html.darkmode .navbtn {
+    background: #242e4b !important;
+    color: #e4e8fb !important;
+    border: 1px solid #444f75 !important;
+}
+body.darkmode .navbtn:hover, html.darkmode .navbtn:hover {
+    background: #3a4670 !important;
+    color: #fff !important;
+}
+body.darkmode .boardname, html.darkmode .boardname {
+    color: #ccd2ff;
+}
+body.darkmode .boarddesc, html.darkmode .boarddesc {
+    color: #a3b2e0;
+}
+body.darkmode .modern-form .form-divider, html.darkmode .modern-form .form-divider {
+    border-top: 1px solid #7b82ae;
+}
+#newthread-toggle {
+    display: inline-block;
+    background: linear-gradient(90deg, #8ca3ee 0%, #b4b5fa 100%);
+    color: #222;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 24px;
+    font-weight: bold;
+    font-size: 1.06em;
+    cursor: pointer;
+    box-shadow: 0 1px 5px #bac1e433;
+    margin: 12px auto 20px auto;
+    transition: background 0.2s, color 0.2s;
+}
+#newthread-toggle:hover {
+    background: linear-gradient(90deg, #6778c2 0%, #adabe3 100%);
+    color: #fff;
+}
+#postform-wrapper {
+    display: none;
+    position: relative;
+    max-width: 520px;
+    margin: 0 auto 18px auto;
+}
+#close-form-btn {
+    position: absolute;
+    right: 13px;
+    top: 13px;
+    background: none;
+    border: none;
+    color: #9bb1e1;
+    font-size: 1.34em;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    transition: color 0.15s;
+}
+#close-form-btn:hover {
+    color: #f45;
+}
+body.darkmode #newthread-toggle {
+    background: linear-gradient(90deg, #4e579e 0%, #8186bf 100%);
+    color: #e6eafc;
+}
+body.darkmode #newthread-toggle:hover {
+    background: linear-gradient(90deg, #282b54 0%, #656bb3 100%);
+    color: #fff;
+}

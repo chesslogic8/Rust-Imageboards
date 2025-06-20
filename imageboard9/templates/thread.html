@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ thread.subject | escape }} – Imageboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .reply, .thread.op { position: relative; }
+    </style>
+</head>
+<body>
+    <!-- DARK MODE TOGGLE (top right) -->
+    <button id="dm-toggle" class="navbtn" style="position:fixed; top:18px; right:22px; z-index:900;">
+        🌙 Dark Mode
+    </button>
+
+    <div class="replymodebar">
+        <a href="/" class="navbtn">Home</a>
+        <a href="/{{ thread.board }}/" class="navbtn" style="margin-left:0.7em;">Back</a>
+        <span>Reply Mode</span>
+    </div>
+
+    <!-- Reply Form at Top -->
+    <div class="postarea" style="margin-bottom:20px;">
+        <form action="/{{ thread.board }}/reply/{{ thread.id }}" method="post" enctype="multipart/form-data" class="modern-form">
+            <textarea name="message" rows="4" required maxlength="50000" placeholder="Message" style="min-height:70px;"></textarea>
+            <input type="file" name="media">
+            <div class="info">Max 50,000 characters. Max file size: 50MB</div>
+            <input type="submit" value="Reply">
+        </form>
+    </div>
+
+    <!-- OP post -->
+    <div class="thread op" style="overflow:auto; position:relative;">
+        <span class="filetitle">{{ thread.subject | escape }}</span>
+        {% if let Some(media) = thread.media %}
+            <div>
+                <a href="/uploads/{{ media }}" target="_blank">
+                    {% if media.ends_with(".mp4") %}
+                        <video controls width="250" style="display:block; margin:0 auto 8px auto;">
+                            <source src="/uploads/{{ media }}">
+                        </video>
+                    {% else %}
+                        <img src="/uploads/{{ media }}" width="250" style="display:block; margin:0 auto 8px auto;">
+                    {% endif %}
+                </a>
+            </div>
+        {% endif %}
+        <div class="message" style="margin-top:10px;">{{ thread.message | escape }}</div>
+    </div>
+    {% for post in posts %}
+    <div class="reply" style="margin:18px 0 10px 36px; overflow:auto; position:relative;">
+        {% if let Some(media) = post.media %}
+            <div>
+                <a href="/uploads/{{ media }}" target="_blank">
+                    {% if media.ends_with(".mp4") %}
+                        <video controls width="180" style="display:block; margin:0 auto 8px auto;">
+                            <source src="/uploads/{{ media }}">
+                        </video>
+                    {% else %}
+                        <img src="/uploads/{{ media }}" width="180" style="display:block; margin:0 auto 8px auto;">
+                    {% endif %}
+                </a>
+            </div>
+        {% endif %}
+        <div class="message" style="margin-top:10px;">{{ post.message | escape }}</div>
+    </div>
+    {% endfor %}
+
+    <hr>
+    <div class="footer"><a href="/{{ thread.board }}/" style="color:#34345C;">Return to board</a></div>
+</body>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+    // Dark mode toggle
+    let btn = document.getElementById('dm-toggle');
+    function setMode(on) {
+        document.body.classList.toggle('darkmode', on);
+        document.documentElement.classList.toggle('darkmode', on);
+        btn.innerText = on ? "☀️ Light Mode" : "🌙 Dark Mode";
+        localStorage.setItem('darkmode', on ? "1" : "0");
+    }
+    btn.onclick = function() {
+        setMode(!document.body.classList.contains('darkmode'));
+    };
+    let dark = localStorage.getItem('darkmode');
+    if (dark === "1" || (dark === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        setMode(true);
+    }
+});
+</script>
+</html>

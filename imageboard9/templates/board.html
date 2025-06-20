@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ board.name | escape }} – Imageboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .boardinfo-thread {
+            background: #e4e8fb;
+            border-radius: 10px;
+            box-shadow: 0 1px 6px #bcc8f222;
+            border: 2px solid #b4b6db;
+            max-width: 700px;
+            margin: 18px auto 30px auto;
+            padding: 14px 18px 16px 18px;
+        }
+        .boardinfo-thread .boardname {
+            font-size: 1.32em;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: #3a4090;
+        }
+        .boardinfo-thread .boarddesc {
+            color: #466;
+            font-size: 1em;
+            font-weight: 400;
+            margin-top: 3px;
+        }
+        body.darkmode .boardinfo-thread {
+            background: #242e4b;
+            border-color: #555b91;
+            color: #cdd0e7;
+        }
+        body.darkmode .boardinfo-thread .boardname {
+            color: #ccd2ff;
+        }
+        body.darkmode .boardinfo-thread .boarddesc {
+            color: #a3b2e0;
+        }
+    </style>
+</head>
+<body>
+    <!-- DARK MODE TOGGLE (top right) -->
+    <button id="dm-toggle" class="navbtn" style="position:fixed; top:18px; right:22px; z-index:900;">
+        🌙 Dark Mode
+    </button>
+    <script>
+    window.addEventListener('DOMContentLoaded', function() {
+        // Dark mode toggle
+        let btn = document.getElementById('dm-toggle');
+        function setMode(on) {
+            document.body.classList.toggle('darkmode', on);
+            document.documentElement.classList.toggle('darkmode', on);
+            btn.innerText = on ? "☀️ Light Mode" : "🌙 Dark Mode";
+            localStorage.setItem('darkmode', on ? "1" : "0");
+        }
+        btn.onclick = function() {
+            setMode(!document.body.classList.contains('darkmode'));
+        };
+        let dark = localStorage.getItem('darkmode');
+        if (dark === "1" || (dark === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            setMode(true);
+        }
+
+        // Create thread show/hide logic
+        var toggleBtn = document.getElementById('newthread-toggle');
+        var formWrapper = document.getElementById('postform-wrapper');
+        var closeBtn = document.getElementById('close-form-btn');
+        toggleBtn.onclick = function() {
+            formWrapper.style.display = "block";
+            toggleBtn.style.display = "none";
+            setTimeout(function() {
+                formWrapper.scrollIntoView({behavior: "smooth", block: "center"});
+            }, 30);
+        };
+        closeBtn.onclick = function() {
+            formWrapper.style.display = "none";
+            toggleBtn.style.display = "inline-block";
+        };
+    });
+    </script>
+
+    <div class="topnav">
+        <a href="/" class="navbtn">Home</a>
+    </div>
+
+    <div class="boardinfo-thread thread op">
+        <div class="boardname">{{ board.name | escape }}</div>
+        <div class="boarddesc">{{ board.desc | escape }}</div>
+    </div>
+
+    <div class="postarea">
+        <button id="newthread-toggle">Create New Thread</button>
+        <div id="postform-wrapper">
+            <button type="button" id="close-form-btn" title="Close">&times;</button>
+            <form action="/{{ board.slug }}/new" method="post" enctype="multipart/form-data" class="modern-form">
+                <div class="form-divider"></div>
+                <input type="text" name="subject" maxlength="75" placeholder="Subject (optional)" autocomplete="off">
+                <textarea name="message" rows="4" required maxlength="50000" placeholder="Message" style="min-height:70px;"></textarea>
+                <input type="file" name="media">
+                <div class="info">Max 50,000 characters. Max file size: 50MB</div>
+                <input type="submit" value="Create Thread">
+            </form>
+        </div>
+    </div>
+    <hr>
+    {% for thread in threads %}
+    <div class="thread op" style="overflow:auto;">
+        {% if let Some(media) = thread.media %}
+            <a href="/uploads/{{ media }}" target="_blank">
+                {% if media.ends_with(".mp4") %}
+                    <video controls width="250" style="float:left; margin:4px 20px 4px 0;">
+                        <source src="/uploads/{{ media }}">
+                    </video>
+                {% else %}
+                    <img src="/uploads/{{ media }}" width="250" style="float:left; margin:4px 20px 4px 0;">
+                {% endif %}
+            </a>
+        {% endif %}
+        <span class="filetitle">{{ thread.subject | escape }}</span>
+        <div class="message" style="margin-left: 270px;">{{ thread.preview | escape }}</div>
+        <div style="clear:both;"></div>
+        {% if let Some(replies) = last_replies.get(&thread.id) %}
+            {% for post in replies %}
+                <div class="reply" style="margin:18px 0 10px 36px; overflow:auto;">
+                    {% if let Some(media) = post.media %}
+                        <a href="/uploads/{{ media }}" target="_blank">
+                            {% if media.ends_with(".mp4") %}
+                                <video controls width="180" style="float:left; margin:4px 16px 4px 0;">
+                                    <source src="/uploads/{{ media }}">
+                                </video>
+                            {% else %}
+                                <img src="/uploads/{{ media }}" width="180" style="float:left; margin:4px 16px 4px 0;">
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                    <div class="message" style="margin-left: 196px;">{{ post.preview | escape }}</div>
+                    <div style="clear:both;"></div>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div>
+            [<a href="/{{ board.slug }}/thread/{{ thread.id }}">Reply</a>] | Replies: {{ thread_reply_counts.get(&thread.id).unwrap_or(&0) }}
+        </div>
+    </div>
+    {% endfor %}
+    <hr>
+    <div style="text-align:center; margin: 10px;">
+        {% if page > 0 %}
+            <a href="/{{ board.slug }}/page/{{ page - 1 }}">&lt; Prev</a>
+        {% endif %}
+        {% for n in (0..page_count) %}
+            {% if n == page %}
+                <b>[{{ n+1 }}]</b>
+            {% else %}
+                <a href="/{{ board.slug }}/page/{{ n }}">[{{ n+1 }}]</a>
+            {% endif %}
+        {% endfor %}
+        {% if page+1 < page_count %}
+            <a href="/{{ board.slug }}/page/{{ page + 1 }}">Next &gt;</a>
+        {% endif %}
+    </div>
+    <div class="footer">Powered by Rust imageboard</div>
+</body>
+</html>
