@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ title }}</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .thread { margin-bottom: 30px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    .thread img, .thread video { max-width: 400px; max-height: 400px; display: block; margin-top: 10px; }
+    .msg { white-space: pre-wrap; }        /* preserve new‑lines safely */
+    .preview { color: #666; font-style: italic; margin-left: 10px; }
+    .active { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <button onclick="location.href='/post_form'">New Thread</button>
+    <h1>{{ title }}</h1>
+    <div style="width:100px;"></div>
+  </div>
+
+  <div>
+    Show:
+    {% for pp in [10,25,50] %}
+      <button {% if *pp == per_page %}class="active"{% endif %}
+              onclick="location.href='/?page=1&per_page={{ pp }}'">
+        {{ pp }}
+      </button>
+    {% endfor %}
+  </div>
+
+  {% for thread in threads %}
+    <div class="thread">
+      <h2>{{ thread.subject }}</h2>
+      <p class="msg">{{ thread.message }}</p>
+
+      {% if thread.filename != "" %}
+        {% if thread.filename.ends_with(".mp4") %}
+          <video controls src="/uploads/{{ thread.filename }}"></video>
+        {% else %}
+          <img src="/uploads/{{ thread.filename }}" alt="attachment">
+        {% endif %}
+      {% endif %}
+
+      <div>
+        <button onclick="location.href='/thread/{{ thread.id }}'">
+          {{ thread.reply_count }} replies
+        </button>
+        {% if thread.preview != "" %}
+          <span class="preview">{{ thread.preview | e }}</span>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+
+  <div>
+    {% if page > 1 %}
+      <button onclick="location.href='/?page={{ page - 1 }}&per_page={{ per_page }}'">← Prev</button>
+    {% endif %}
+    Page {{ page }} of {{ total_pages }}
+    {% if page < total_pages %}
+      <button onclick="location.href='/?page={{ page + 1 }}&per_page={{ per_page }}'">Next →</button>
+    {% endif %}
+  </div>
+</body>
+</html>

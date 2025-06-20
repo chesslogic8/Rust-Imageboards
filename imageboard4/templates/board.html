@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ board | e }} – Chess Board</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .thread { margin-bottom: 30px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    .thread img, .thread video { max-width: 400px; max-height: 400px; display: block; margin-top: 10px; }
+    .msg { white-space: pre-wrap; }
+    .active { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <button onclick="location.href='/chess/{{ board }}/post_form'">New Thread</button>
+    <h1>{{ board | e }}</h1>
+    <button onclick="location.href='/'">Home</button>
+  </div>
+
+  <div>
+    Show:
+    {% for pp in [10,25,50] %}
+      <button {% if *pp == per_page %}class="active"{% endif %}
+              onclick="location.href='/chess/{{ board }}/?page=1&per_page={{ pp }}'">
+        {{ pp }}
+      </button>
+    {% endfor %}
+  </div>
+
+  {% for thread in threads %}
+    <div class="thread">
+      <h2>{{ thread.subject }}</h2>
+      <p class="msg">{{ thread.preview }}</p>
+      {% if thread.filename != "" %}
+        {% if thread.filename.ends_with(".mp4") %}
+          <video controls src="/chess/{{ board }}/uploads/{{ thread.filename }}"></video>
+        {% else %}
+          <img src="/chess/{{ board }}/uploads/{{ thread.filename }}" alt="attachment">
+        {% endif %}
+      {% endif %}
+      <div>
+        <button onclick="location.href='/chess/{{ board }}/thread/{{ thread.id }}'">
+          {{ thread.reply_count }} replies
+        </button>
+      </div>
+    </div>
+  {% endfor %}
+
+  <div>
+    {% if page > 1 %}
+      <button onclick="location.href='/chess/{{ board }}/?page={{ page - 1 }}&per_page={{ per_page }}'">← Prev</button>
+    {% endif %}
+    Page {{ page }} of {{ total_pages }}
+    {% if page < total_pages %}
+      <button onclick="location.href='/chess/{{ board }}/?page={{ page + 1 }}&per_page={{ per_page }}'">Next →</button>
+    {% endif %}
+  </div>
+</body>
+</html>

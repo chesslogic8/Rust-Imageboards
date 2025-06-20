@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ board | e }} – Thread {{ id }}</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .post, .reply { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; position: relative; }
+    .reply { margin-left: 20px; }
+    .msg  { white-space: pre-wrap; }
+    .reply-form textarea { width: 100%; margin-bottom: 10px; box-sizing: border-box; }
+    .admin-delete { position: absolute; bottom: 8px; right: 12px; color: #c00; font-weight: bold; text-decoration: none; background: #fff; border: none; cursor: pointer; }
+    .admin-delete:hover { color: #f00; }
+  </style>
+  <script>
+    function deletePost(board, id, type) {
+      var pw = prompt("Enter admin password to delete this " + type + ":");
+      if (!pw) return false;
+      var form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/chess/' + board + '/delete';
+      form.style.display = 'none';
+
+      var f1 = document.createElement('input');
+      f1.name = 'password'; f1.value = pw;
+      var f2 = document.createElement('input');
+      f2.name = 'target'; f2.value = type;
+      var f3 = document.createElement('input');
+      f3.name = 'id'; f3.value = id;
+      form.appendChild(f1); form.appendChild(f2); form.appendChild(f3);
+      document.body.appendChild(form);
+      form.submit();
+      return false;
+    }
+  </script>
+</head>
+<body>
+  <button onclick="location.href='/chess/{{ board }}/'">← Back</button>
+  <div class="post">
+    <h2>{{ subject }}</h2>
+    <p class="msg">{{ message }}</p>
+    {% if filename != "" %}
+      {% if filename.ends_with(".mp4") %}
+        <video controls src="/chess/{{ board }}/uploads/{{ filename }}" style="max-width:100%;"></video>
+      {% else %}
+        <img src="/chess/{{ board }}/uploads/{{ filename }}" alt="attachment" style="max-width:100%;">
+      {% endif %}
+    {% endif %}
+    <button class="admin-delete" title="Delete thread"
+      onclick="return deletePost('{{ board }}', {{ id }}, 'post');">[x]</button>
+  </div>
+  {% for reply in replies %}
+    <div class="reply">
+      <p class="msg">{{ reply.1 }}</p>
+      <button class="admin-delete" title="Delete reply"
+        onclick="return deletePost('{{ board }}', {{ reply.0 }}, 'reply');">[x]</button>
+    </div>
+  {% endfor %}
+  <div class="reply-form">
+    <form action="/chess/{{ board }}/reply" method="post">
+      <input type="hidden" name="post_id" value="{{ id }}">
+      <textarea name="message" rows="4" placeholder="Your reply…" required></textarea><br>
+      <button type="submit">Post Reply</button>
+    </form>
+  </div>
+</body>
+</html>

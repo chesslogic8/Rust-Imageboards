@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ title }} – Thread {{ id }}</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    button.back { margin-bottom: 20px; }
+    .post, .reply { 
+      margin-bottom: 20px; 
+      padding: 10px; 
+      border: 1px solid #ccc; 
+      border-radius: 5px; 
+    }
+    .reply { margin-left: 20px; }
+    .reply-form { margin-top: 30px; }
+    .reply-form textarea { width: 100%; box-sizing: border-box; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <button class="back" onclick="location.href='/'">← Back</button>
+
+  <div class="post">
+    <h2>{{ subject }}</h2>
+    <p>{{ message }}</p>
+    {% if filename != "" %}
+      <img src="/uploads/{{ filename }}" alt="attachment" style="max-width:100%;"><br>
+    {% endif %}
+  </div>
+
+  {% for reply in replies %}
+    <div class="reply">
+      <p>{{ reply }}</p>
+    </div>
+  {% endfor %}
+
+  <div class="reply-form">
+    <form action="/reply" method="post">
+      <input type="hidden" name="post_id" value="{{ id }}">
+      <textarea name="message" rows="4" placeholder="Your reply…" required></textarea><br>
+      <button type="submit">Post Reply</button>
+    </form>
+  </div>
+</body>
+</html>

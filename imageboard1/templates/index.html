@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ title }}</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .header button { }
+    .header h1   { margin: 0 auto; }
+    .perpage, .pager { margin: 10px 0; }
+    .perpage button, .pager button { margin-right: 5px; }
+    .active { font-weight: bold; }
+    .thread { margin-bottom: 30px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    .thread h2 { margin: 0 0 5px; }
+    .thread .actions { margin-top: 10px; }
+    .preview { color: #666; font-style: italic; margin-left: 10px; }
+
+    /* LIMIT ATTACHMENTS ON MAIN PAGE */
+    .thread img,
+    .thread video {
+      max-width: 400px;
+      max-height: 400px;
+      width: auto;
+      height: auto;
+      display: block;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <button onclick="location.href='/post_form'">New Thread</button>
+    <h1>{{ title }}</h1>
+    <div style="width:100px;"></div>
+  </div>
+
+  <!-- per-page selector -->
+  <div class="perpage">
+    Show:
+    {% for pp in [10, 25, 50] %}
+      <button
+        {% if *pp == per_page %}class="active"{% endif %}
+        onclick="location.href='/?page=1&per_page={{ pp }}'">
+        {{ pp }}
+      </button>
+    {% endfor %}
+  </div>
+
+  <!-- thread list -->
+  {% for thread in threads %}
+    <div class="thread">
+      <h2>{{ thread.subject }}</h2>
+      <p>{{ thread.message }}</p>
+
+      {% if thread.filename != "" %}
+        <img src="/uploads/{{ thread.filename }}" alt="attachment">
+      {% endif %}
+
+      <div class="actions">
+        <button onclick="location.href='/thread/{{ thread.id }}'">
+          {{ thread.reply_count }} replies
+        </button>
+
+        {% if thread.preview != "" %}
+          <span class="preview">{{ thread.preview | e }}</span>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+
+  <!-- pager -->
+  <div class="pager">
+    {% if page > 1 %}
+      <button onclick="location.href='/?page={{ page - 1 }}&per_page={{ per_page }}'">
+        ← Prev
+      </button>
+    {% endif %}
+    Page {{ page }} of {{ total_pages }}
+    {% if page < total_pages %}
+      <button onclick="location.href='/?page={{ page + 1 }}&per_page={{ per_page }}'">
+        Next →
+      </button>
+    {% endif %}
+  </div>
+</body>
+</html>
+

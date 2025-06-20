@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ board | e }} – New Thread</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #post-form { max-width: 500px; margin: 20px auto; }
+    #post-form input, #post-form textarea { width: 100%; box-sizing: border-box; margin-bottom: 10px; }
+    button.back { display: block; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <button class="back" onclick="location.href='/chess/{{ board }}/'">← Back</button>
+  <div id="post-form">
+    <h1>Create New Thread – {{ board | e }}</h1>
+    <form action="/chess/{{ board }}/post" method="post" enctype="multipart/form-data">
+      <input type="text" name="subject" placeholder="Subject" required><br>
+      <textarea name="message" rows="4" placeholder="Message" required></textarea><br>
+      <input type="file" name="file" accept="image/*,video/mp4"><br>
+      <button type="submit">Create Thread</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+body {
+    color: #CCC;
+    font-weight: 100;
+    margin: auto;
+    width: 800px;
+    background: #222;
+}
+h1, h2, .filetitle {
+    color: #CC1105;
+}
+.thread, .post {
+    background: rgba(20,20,20,0.5);
+    border: 1px dashed #666;
+    border-radius: 2px;
+    max-width: 700px;
+    padding: 8px;
+    margin: 24px auto;
+    word-wrap: break-word;
+}
+a { color: #CCC; text-decoration: none; }
+a:hover { color: #fff; text-decoration: underline; }
+input[type="text"], textarea, select {
+    background: rgba(20,20,20,0.5);
+    border: 1px solid #999;
+    color: #fff;
+}
+button {
+    background: #e0e0e0;
+    color: #222;
+    border: 1px solid #666;
+    border-radius: 4px;
+    padding: 4px 18px;
+}
+button:hover { background: #fff; color: #111; }
+hr { border: none; border-top: 1px solid #888; margin: 20px 0; }
+img, video {
+    display: block;
+    margin: 8px 0;
+    border-radius: 3px;
+    max-width: 90%;
+}
+.logo { color: #666; font-size: 2em; text-align: center; margin: 10px auto; }
+.replylink { float: right; font-size: small; }
+.filetitle { font-weight: bold; }
+
+form.postform {
+    margin: 0 auto 2em auto;
+    width: 450px;
+    background: rgba(20,20,20,0.5);
+    border-radius: 4px;
+    padding: 12px 24px 10px 24px;
+    box-shadow: 0 2px 8px #1115;
+    text-align: left;
+}
+form.postform div {
+    margin-bottom: 8px;
+}
+form.postform button {
+    width: 100%;
+    margin-top: 10px;
+}

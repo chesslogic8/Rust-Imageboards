@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ board | e }} – Thread {{ id }}</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .post, .reply { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    .reply { margin-left: 20px; }
+    .msg  { white-space: pre-wrap; }
+    .reply-form textarea { width: 100%; margin-bottom: 10px; box-sizing: border-box; }
+  </style>
+</head>
+<body>
+  <button onclick="location.href='/chess/{{ board }}/'">← Back</button>
+  <div class="post">
+    <h2>{{ subject }}</h2>
+    <p class="msg">{{ message }}</p>
+    {% if filename != "" %}
+      {% if filename.ends_with(".mp4") %}
+        <video controls src="/chess/{{ board }}/uploads/{{ filename }}" style="max-width:100%;"></video>
+      {% else %}
+        <img src="/chess/{{ board }}/uploads/{{ filename }}" alt="attachment" style="max-width:100%;">
+      {% endif %}
+    {% endif %}
+  </div>
+  {% for reply in replies %}
+    <div class="reply">
+      <p class="msg">{{ reply }}</p>
+    </div>
+  {% endfor %}
+  <div class="reply-form">
+    <form action="/chess/{{ board }}/reply" method="post">
+      <input type="hidden" name="post_id" value="{{ id }}">
+      <textarea name="message" rows="4" placeholder="Your reply…" required></textarea><br>
+      <button type="submit">Post Reply</button>
+    </form>
+  </div>
+</body>
+</html>

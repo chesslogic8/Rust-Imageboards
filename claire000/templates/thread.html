@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ thread.subject | escape }} – Imageboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="logo"><a href="/" style="color:#fff;text-decoration:none;">Imageboard</a></div>
+    <div class="thread op">
+        <span class="filetitle">{{ thread.subject | escape }}</span>
+        <br>
+        <span>{{ thread.message | escape }}</span>
+        {% if let Some(media) = thread.media %}
+            {% if media.ends_with(".mp4") %}
+                <video controls width="200">
+                    <source src="/uploads/{{ media }}">
+                </video>
+            {% else %}
+                <img src="/uploads/{{ media }}" width="200">
+            {% endif %}
+        {% endif %}
+    </div>
+    <hr>
+    {% for post in posts %}
+        <div class="post">
+            <span>{{ post.message | escape }}</span>
+            {% if let Some(media) = post.media %}
+                {% if media.ends_with(".mp4") %}
+                    <video controls width="200">
+                        <source src="/uploads/{{ media }}">
+                    </video>
+                {% else %}
+                    <img src="/uploads/{{ media }}" width="200">
+                {% endif %}
+            {% endif %}
+        </div>
+    {% endfor %}
+    <hr>
+    <form action="/reply/{{ thread.id }}" method="post" enctype="multipart/form-data" class="postform">
+        <div>
+            <textarea name="message" placeholder="Reply" cols="48" rows="3" required></textarea>
+        </div>
+        <div>
+            <input type="file" name="media">
+        </div>
+        <div>
+            <button type="submit">Reply</button>
+        </div>
+    </form>
+    <div class="footer" style="text-align:center; color:#888;"><a href="/" style="color:#fff;">Return to board</a></div>
+</body>
+</html>

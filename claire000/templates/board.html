@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Imageboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="logo"><a href="/" style="color:#fff;text-decoration:none;">Imageboard</a></div>
+    <form action="/new" method="post" enctype="multipart/form-data" class="postform">
+        <div>
+            <input type="text" name="subject" placeholder="Subject" size="40" maxlength="75" required>
+        </div>
+        <div>
+            <textarea name="message" placeholder="Message" cols="48" rows="3" required></textarea>
+        </div>
+        <div>
+            <input type="file" name="media">
+        </div>
+        <div>
+            <button type="submit">Create Thread</button>
+        </div>
+    </form>
+    <hr>
+    {% for thread in threads %}
+        <div class="thread">
+            <span class="replylink">[<a href="/thread/{{ thread.id }}">View thread</a>]</span>
+            <span class="filetitle">{{ thread.subject | escape }}</span>
+            <br>
+            <span>
+                {{ thread.preview | escape }}
+            </span>
+            {% if let Some(media) = thread.media %}
+                {% if media.ends_with(".mp4") %}
+                    <video controls width="200">
+                        <source src="/uploads/{{ media }}">
+                    </video>
+                {% else %}
+                    <img src="/uploads/{{ media }}" width="200">
+                {% endif %}
+            {% endif %}
+            {% if let Some(replies) = last_replies.get(&thread.id) %}
+                {% for post in replies %}
+                    <div class="post" style="margin-left:24px; margin-top:12px;">
+                        <span>{{ post.message | escape }}</span>
+                        {% if let Some(media) = post.media %}
+                            {% if media.ends_with(".mp4") %}
+                                <video controls width="200">
+                                    <source src="/uploads/{{ media }}">
+                                </video>
+                            {% else %}
+                                <img src="/uploads/{{ media }}" width="200">
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div style="margin-top: 6px; color: #aaa;">
+                Replies: {{ thread_reply_counts.get(&thread.id).unwrap_or(&0) }}
+            </div>
+        </div>
+    {% endfor %}
+    <hr>
+    <div style="text-align:center; margin: 10px;">
+        {% if page > 0 %}
+            <a href="/page/{{ page - 1 }}">&lt; Prev</a>
+        {% endif %}
+        {% for n in (0..page_count) %}
+            {% if n == page %}
+                <b>[{{ n+1 }}]</b>
+            {% else %}
+                <a href="/page/{{ n }}">[{{ n+1 }}]</a>
+            {% endif %}
+        {% endfor %}
+        {% if page+1 < page_count %}
+            <a href="/page/{{ page + 1 }}">Next &gt;</a>
+        {% endif %}
+    </div>
+    <div class="footer" style="text-align:center; color:#888;">Powered by Rust imageboard</div>
+</body>
+</html>

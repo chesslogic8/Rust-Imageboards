@@ -1,0 +1,1 @@
+simply create a new blank directory in /chess , it makes a new board the first time you visit the url from a browser! 
