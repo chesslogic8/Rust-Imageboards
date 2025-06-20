@@ -11,8 +11,7 @@ Rust is objectively superior to most other programming languages, especially for
 
 #  Imageboard menu of starter apps 
 
-# Kept in early dev stages on purspose so you can instantly start dev from working imageboard app! Do not know how to code in Rust? NO PROBLEM!! Ai knows how to code in rust better than humans do, and Ai is willing to code for you. 
-
+# Kept in early dev stages on purspose so you can instantly start dev from working imageboard app! Do not know how to code in Rust? NO PROBLEM!! Ai can write your code! 
 Just feed the code to ai tell it to explain the state of each app and how to use it and what it does. The apps are minimal, but they all function. 
 
 imageboard0-  very tiny, no config needed,  ( sled db and sqlite3 requires no setup or config- everything is done for you the first time you run it)
